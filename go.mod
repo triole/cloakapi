@@ -7,7 +7,7 @@ require (
 	github.com/alecthomas/kong v1.13.0
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/triole/logseal v0.0.0-20240105053125-57d1f8179998
-	go.yaml.in/yaml/v2 v2.4.3
+	go.yaml.in/yaml/v3 v3.0.4
 )
 
 require (
