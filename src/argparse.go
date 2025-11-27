@@ -27,8 +27,8 @@ var cli struct {
 	VersionFlag bool   `help:"display version" short:"V"`
 
 	Ls struct {
-		Entity string `help:"entity to list" arg:"" enum:"users,idps" default:"users"`
-	} `cmd:"" help:"list entities, can be: users,idps"`
+		Entity string `help:"entity to list" arg:"" enum:"users,idps,feds" default:"users"`
+	} `cmd:"" help:"list entities, can be: users,idps,feds"`
 }
 
 func parseArgs() {

@@ -43,24 +43,40 @@ func (kc *tKC) login() {
 	kc.Lg.IfErrFatal("login failed", logseal.F{"error": err})
 }
 
-// listAllUsers fetches a list of all users from Keycloak
-func (kc *tKC) listUsers() {
-	params := gocloak.GetUsersParams{}
-	users, err := kc.Session.Client.GetUsers(
-		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm, params,
-	)
-	kc.Lg.IfErrError("could not retrieve user list", logseal.F{"error": err})
+// keep-sorted start block=yes newline_separated=yes
+func (kc *tKC) listFederatedIDs() (fedIDs []*gocloak.FederatedIdentityRepresentation, err error) {
+	var users []*gocloak.User
+	users, err = kc.listUsers()
 	if err == nil {
-		pprint(users)
+		for _, user := range users {
+			feds, err := kc.Session.Client.GetUserFederatedIdentities(
+				kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
+				*user.ID,
+			)
+			if err == nil {
+				fedIDs = append(fedIDs, feds...)
+			}
+			kc.Lg.IfErrError("could not retrieve user list", logseal.F{"error": err})
+		}
 	}
+	return
 }
 
-func (kc *tKC) listIDPs() {
-	idps, err := kc.Session.Client.GetIdentityProviders(
+func (kc *tKC) listIDPs() (idps []*gocloak.IdentityProviderRepresentation, err error) {
+	idps, err = kc.Session.Client.GetIdentityProviders(
 		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
 	)
 	kc.Lg.IfErrError("error", logseal.F{"error": err})
-	if err == nil {
-		pprint(idps)
-	}
+	return
 }
+
+func (kc *tKC) listUsers() (users []*gocloak.User, err error) {
+	params := gocloak.GetUsersParams{}
+	users, err = kc.Session.Client.GetUsers(
+		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm, params,
+	)
+	kc.Lg.IfErrError("could not retrieve user list", logseal.F{"error": err})
+	return
+}
+
+// keep-sorted end

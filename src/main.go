@@ -17,15 +17,21 @@ func main() {
 	kc.initConf()
 	kc.login()
 
+	var outp any
+	var err error
 	switch cli.Action {
 	case "ls":
-
 		switch cli.Ls.Entity {
-		case "users":
-			kc.listUsers()
+		case "feds":
+			outp, err = kc.listFederatedIDs()
 		case "idps":
-			kc.listIDPs()
+			outp, err = kc.listIDPs()
+		case "users":
+			outp, err = kc.listUsers()
 		}
+	}
+	if err == nil {
+		pprint(outp)
 	}
 }
 
