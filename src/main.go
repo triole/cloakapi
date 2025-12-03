@@ -28,7 +28,17 @@ func main() {
 			kc.fetchUsers()
 		}
 	}
-	pprint(kc.API)
+
+	switch cli.Output {
+	case "json":
+		pprintJSON(kc.API)
+	case "toml":
+		pprintTOML(kc.API)
+	case "yaml":
+		pprintYAML(kc.API)
+	case "table":
+		// renderTable()
+	}
 }
 
 func initKC() (kc tKC) {

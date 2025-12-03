@@ -19,6 +19,7 @@ var (
 var cli struct {
 	Action      string `kong:"-" enum:"conf,exec,calc" default:"conf"`
 	Conf        string `help:"path to config file" short:"c" default:"${configFile}"`
+	Output      string `help:"output format" short:"o" enum:"json,toml,yaml,table" default:"table"`
 	LogFile     string `help:"log file" default:"/dev/stdout"`
 	LogLevel    string `help:"log level" default:"info" enum:"trace,debug,info,error"`
 	LogNoColors bool   `help:"disable output colours, print plain text"`
