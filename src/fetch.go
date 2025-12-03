@@ -80,14 +80,4 @@ func (kc *tKC) fetchUsers() {
 	return
 }
 
-func (kc *tKC) listUserDetails() {
-	if len(kc.API.Users) == 0 {
-		kc.fetchUsers()
-	}
-	if len(kc.API.FedIDs) == 0 {
-		kc.fetchFederatedIDs()
-	}
-	return
-}
-
 // keep-sorted end
