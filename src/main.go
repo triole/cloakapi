@@ -17,22 +17,18 @@ func main() {
 	kc.initConf()
 	kc.login()
 
-	var outp any
-	var err error
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
 		case "feds":
-			outp, err = kc.listFederatedIDs()
+			kc.fetchFederatedIDs()
 		case "idps":
-			outp, err = kc.listIDPs()
+			kc.fetchIDPs()
 		case "users":
-			outp, err = kc.listUsers()
+			kc.fetchUsers()
 		}
 	}
-	if err == nil {
-		pprint(outp)
-	}
+	pprint(kc.API)
 }
 
 func initKC() (kc tKC) {

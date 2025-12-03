@@ -44,38 +44,49 @@ func (kc *tKC) login() {
 }
 
 // keep-sorted start block=yes newline_separated=yes
-func (kc *tKC) listFederatedIDs() (fedIDs []*gocloak.FederatedIdentityRepresentation, err error) {
-	var users []*gocloak.User
-	users, err = kc.listUsers()
-	if err == nil {
-		for _, user := range users {
+func (kc *tKC) fetchFederatedIDs() {
+	if len(kc.API.Users) == 0 {
+		kc.fetchUsers()
+	}
+	if kc.API.UsersError == nil {
+		for _, user := range kc.API.Users {
 			feds, err := kc.Session.Client.GetUserFederatedIdentities(
 				kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
 				*user.ID,
 			)
 			if err == nil {
-				fedIDs = append(fedIDs, feds...)
+				kc.API.FedIDs = append(kc.API.FedIDs, feds...)
 			}
 			kc.Lg.IfErrError("could not retrieve user list", logseal.F{"error": err})
 		}
 	}
-	return
 }
 
-func (kc *tKC) listIDPs() (idps []*gocloak.IdentityProviderRepresentation, err error) {
-	idps, err = kc.Session.Client.GetIdentityProviders(
+func (kc *tKC) fetchIDPs() {
+	kc.API.IDPs, kc.API.IDPsError = kc.Session.Client.GetIdentityProviders(
 		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
 	)
-	kc.Lg.IfErrError("error", logseal.F{"error": err})
+	kc.Lg.IfErrError("error", logseal.F{"error": kc.API.IDPsError})
+}
+
+func (kc *tKC) fetchUsers() {
+	params := gocloak.GetUsersParams{}
+	kc.API.Users, kc.API.UsersError = kc.Session.Client.GetUsers(
+		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm, params,
+	)
+	kc.Lg.IfErrError(
+		"could not retrieve user list", logseal.F{"error": kc.API.UsersError},
+	)
 	return
 }
 
-func (kc *tKC) listUsers() (users []*gocloak.User, err error) {
-	params := gocloak.GetUsersParams{}
-	users, err = kc.Session.Client.GetUsers(
-		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm, params,
-	)
-	kc.Lg.IfErrError("could not retrieve user list", logseal.F{"error": err})
+func (kc *tKC) listUserDetails() {
+	if len(kc.API.Users) == 0 {
+		kc.fetchUsers()
+	}
+	if len(kc.API.FedIDs) == 0 {
+		kc.fetchFederatedIDs()
+	}
 	return
 }
 
