@@ -37,7 +37,7 @@ func main() {
 	case "yaml":
 		pprintYAML(kc.API)
 	case "table":
-		// renderTable()
+		kc.printTable()
 	}
 }
 
