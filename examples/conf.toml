@@ -2,5 +2,5 @@ url = "http://localhost:8080"
 realm = "master"
 client_id = "myclient"
 client_secret = "mysecret"
-proxy = ""
+# proxy = "socks5://proxy:3333"
 insecure = true
