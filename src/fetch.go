@@ -77,7 +77,6 @@ func (kc *tKC) fetchUsers() {
 	kc.Lg.IfErrError(
 		"could not retrieve user list", logseal.F{"error": kc.API.UsersError},
 	)
-	return
 }
 
 // keep-sorted end
