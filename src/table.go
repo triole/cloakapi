@@ -28,15 +28,20 @@ func (kc tKC) printFederatedIDsTable() {
 		"email",
 		"local id",
 		"remote id",
+		"remote idp",
 	}
 	var content [][]any
 	for _, user := range kc.API.Users {
+		userName := derefString(user.Username)
+		remID, remIDP := kc.getFedID(userName)
 		line := []any{
-			derefString(user.Username),
+			userName,
 			derefString(user.FirstName),
 			derefString(user.LastName),
 			derefString(user.Email),
 			derefString(user.ID),
+			remID,
+			remIDP,
 		}
 		content = append(content, line)
 	}
