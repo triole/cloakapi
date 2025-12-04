@@ -24,6 +24,8 @@ func main() {
 			kc.fetchFederatedIDs()
 		case getCommand(commands.List.IdentityProviders):
 			kc.fetchIDPs()
+		case getCommand(commands.List.UserAttributes):
+			kc.fetchUsers()
 		case getCommand(commands.List.Users):
 			kc.fetchUsers()
 		}

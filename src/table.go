@@ -10,41 +10,21 @@ func (kc *tKC) printTable() {
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
+		// keep-sorted start block=yes
 		case getCommand(commands.List.FedIDs):
 			kc.printFederatedIDsTable()
 		case getCommand(commands.List.IdentityProviders):
 			kc.printIDPsTable()
+		case getCommand(commands.List.UserAttributes):
+			kc.printUserAttributes()
 		case getCommand(commands.List.Users):
 			kc.printUsersTable()
+			// keep-sorted end
 		}
 	}
 }
 
-func (kc tKC) printUsersTable() {
-	header := []string{
-		"user name",
-		"first name",
-		"last name",
-		"email",
-		"user enabled",
-		"email verified",
-	}
-	var content [][]any
-	for _, user := range kc.API.Users {
-		userName := deref(user.Username)
-		line := []any{
-			userName,
-			deref(user.FirstName),
-			deref(user.LastName),
-			deref(user.Email),
-			*user.Enabled,
-			*user.EmailVerified,
-		}
-		content = append(content, line)
-	}
-	renderTable(header, content)
-}
-
+// keep-sorted start block=yes newline_separated=yes
 func (kc tKC) printFederatedIDsTable() {
 	header := []string{
 		"user name",
@@ -90,6 +70,51 @@ func (kc tKC) printIDPsTable() {
 	}
 	renderTable(header, content)
 }
+
+func (kc tKC) printUserAttributes() {
+	header := []string{
+		"user name",
+		"email",
+	}
+	var content [][]any
+	for _, user := range kc.API.Users {
+		userName := deref(user.Username)
+		line := []any{
+			userName,
+			deref(user.Email),
+			fmtYAML(user.Attributes),
+		}
+		content = append(content, line)
+	}
+	renderTable(header, content)
+}
+
+func (kc tKC) printUsersTable() {
+	header := []string{
+		"user name",
+		"first name",
+		"last name",
+		"email",
+		"user enabled",
+		"email verified",
+	}
+	var content [][]any
+	for _, user := range kc.API.Users {
+		userName := deref(user.Username)
+		line := []any{
+			userName,
+			deref(user.FirstName),
+			deref(user.LastName),
+			deref(user.Email),
+			*user.Enabled,
+			*user.EmailVerified,
+		}
+		content = append(content, line)
+	}
+	renderTable(header, content)
+}
+
+// keep-sorted end
 
 func renderTable(header []string, content [][]any) {
 	t := table.NewWriter()

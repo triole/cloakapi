@@ -8,41 +8,6 @@ import (
 	"github.com/triole/logseal"
 )
 
-func (kc *tKC) login() {
-	var err error
-	kc.Session.Client = gocloak.NewClient(kc.Conf.URL)
-
-	if kc.Lg.Logrus.Level > 5 {
-		kc.Session.Client.RestyClient().SetDebug(true)
-	}
-
-	if kc.Conf.Insecure {
-		kc.Session.Client.RestyClient().SetTLSClientConfig(
-			&tls.Config{InsecureSkipVerify: true},
-		)
-	}
-
-	if kc.Conf.Proxy != "" {
-		kc.Session.Client.RestyClient().SetProxy(kc.Conf.Proxy)
-	}
-	kc.Lg.Debug(
-		"proxy",
-		logseal.F{
-			"is_set": kc.Session.Client.RestyClient().IsProxySet(),
-			"proxy":  kc.Conf.Proxy,
-		},
-	)
-
-	kc.Session.CTX = context.Background()
-	kc.Session.Token, err = kc.Session.Client.LoginClient(
-		kc.Session.CTX,
-		kc.Conf.ClientID,
-		kc.Conf.ClientSecret,
-		kc.Conf.Realm,
-	)
-	kc.Lg.IfErrFatal("login failed", logseal.F{"error": err})
-}
-
 // keep-sorted start block=yes newline_separated=yes
 func (kc *tKC) fetchFederatedIDs() {
 	if len(kc.API.Users) == 0 {
@@ -87,3 +52,38 @@ func (kc *tKC) fetchUsers() {
 }
 
 // keep-sorted end
+
+func (kc *tKC) login() {
+	var err error
+	kc.Session.Client = gocloak.NewClient(kc.Conf.URL)
+
+	if kc.Lg.Logrus.Level > 5 {
+		kc.Session.Client.RestyClient().SetDebug(true)
+	}
+
+	if kc.Conf.Insecure {
+		kc.Session.Client.RestyClient().SetTLSClientConfig(
+			&tls.Config{InsecureSkipVerify: true},
+		)
+	}
+
+	if kc.Conf.Proxy != "" {
+		kc.Session.Client.RestyClient().SetProxy(kc.Conf.Proxy)
+	}
+	kc.Lg.Debug(
+		"proxy",
+		logseal.F{
+			"is_set": kc.Session.Client.RestyClient().IsProxySet(),
+			"proxy":  kc.Conf.Proxy,
+		},
+	)
+
+	kc.Session.CTX = context.Background()
+	kc.Session.Token, err = kc.Session.Client.LoginClient(
+		kc.Session.CTX,
+		kc.Conf.ClientID,
+		kc.Conf.ClientSecret,
+		kc.Conf.Realm,
+	)
+	kc.Lg.IfErrFatal("login failed", logseal.F{"error": err})
+}

@@ -47,3 +47,8 @@ func pprintYAML(i any) {
 	s, _ := yaml.Marshal(i)
 	fmt.Println(string(s))
 }
+
+func fmtYAML(i any) string {
+	s, _ := yaml.Marshal(i)
+	return string(s)
+}
