@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	toml "github.com/pelletier/go-toml/v2"
 	"go.yaml.in/yaml/v3"
@@ -51,4 +52,44 @@ func pprintYAML(i any) {
 func fmtYAML(i any) string {
 	s, _ := yaml.Marshal(i)
 	return string(s)
+}
+
+func fileDoesExists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func find(basedir string, rxFilter string) []string {
+	_, err := os.Stat(basedir)
+	// if err != nil {
+	// 	fmt.Printf("can not access folder %q\n", err)
+	// 	os.Exit(1)
+	// }
+	filelist := []string{}
+	rxf, _ := regexp.Compile(rxFilter)
+
+	err = filepath.Walk(basedir, func(path string, f os.FileInfo, err error) error {
+		if rxf.MatchString(path) {
+			inf, err := os.Stat(path)
+			if err == nil {
+				if !inf.IsDir() {
+					filelist = append(filelist, path)
+				}
+			} else {
+				print("stat file failed %q", err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		fmt.Printf("unable to detect files %q\n", err)
+		os.Exit(1)
+	}
+	return filelist
 }

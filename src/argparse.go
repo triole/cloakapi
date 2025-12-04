@@ -39,7 +39,7 @@ type tCommandsList struct {
 
 var cli struct {
 	Action      string `kong:"-" enum:"conf,exec,calc" default:"conf"`
-	Conf        string `help:"path to config file" short:"c" default:"${configFile}"`
+	Conf        string `help:"config file detection expression" required:"" short:"c"`
 	Output      string `help:"output format" short:"o" enum:"json,toml,yaml,table" default:"table"`
 	LogFile     string `help:"log file" default:"/dev/stdout"`
 	LogLevel    string `help:"log level" default:"info" enum:"trace,debug,info,error"`
@@ -94,7 +94,6 @@ func parseArgs() {
 			Summary: true,
 		}),
 		kong.Vars{
-			"configFile":       "conf.toml",
 			"listCommands":     listCommands,
 			"listCommandEnums": listCommandEnums,
 		},
