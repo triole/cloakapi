@@ -54,6 +54,12 @@ func (kc *tKC) fetchFederatedIDs() {
 				kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
 				*user.ID,
 			)
+			kc.Lg.IfErrError(
+				"could not fetch federated id",
+				logseal.F{
+					"user": deref(user.Username), "error": err,
+				},
+			)
 			if err == nil {
 				kc.API.FedIDs = append(kc.API.FedIDs, feds...)
 			}
@@ -67,6 +73,7 @@ func (kc *tKC) fetchIDPs() {
 		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
 	)
 	kc.Lg.IfErrError("error", logseal.F{"error": kc.API.IDPsError})
+
 }
 
 func (kc *tKC) fetchUsers() {
