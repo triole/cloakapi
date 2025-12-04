@@ -50,8 +50,18 @@ var cli struct {
 	VersionFlag bool   `help:"display version" short:"V"`
 
 	Ls struct {
-		Entity string `help:"entity to list" arg:"" default:"usr"`
+		Entity string `help:"entity to list" arg:"" enum:"${listCommandEnums}"`
 	} `cmd:"" help:"list entities, available commands: ${listCommands}"`
+}
+
+func getCommandEnums(cmds any) (ret string) {
+	v := reflect.ValueOf(cmds)
+	for i := 0; i < v.NumField(); i++ {
+		cmd := getCommand(v.Field(i).String())
+		ret += cmd + ","
+	}
+	ret = strings.TrimSuffix(ret, ",")
+	return
 }
 
 func getCommand(str string) (ret string) {
@@ -61,6 +71,7 @@ func getCommand(str string) (ret string) {
 	}
 	return
 }
+
 func pprintCommandList(cmds any) (ret string) {
 	v := reflect.ValueOf(cmds)
 	for i := 0; i < v.NumField(); i++ {
@@ -82,6 +93,7 @@ func sortedIterator(mp map[string]string) (arr []string) {
 
 func parseArgs() {
 	listCommands := pprintCommandList(commands.List)
+	listCommandEnums := getCommandEnums(commands.List)
 	ctx := kong.Parse(&cli,
 		kong.Name(appName),
 		kong.Description(appDescription),
@@ -91,8 +103,9 @@ func parseArgs() {
 			Summary: true,
 		}),
 		kong.Vars{
-			"configFile":   "conf.toml",
-			"listCommands": listCommands,
+			"configFile":       "conf.toml",
+			"listCommands":     listCommands,
+			"listCommandEnums": listCommandEnums,
 		},
 	)
 	_ = ctx.Run()
