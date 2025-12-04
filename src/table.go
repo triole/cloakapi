@@ -48,8 +48,6 @@ func (kc tKC) printUsersTable() {
 func (kc tKC) printFederatedIDsTable() {
 	header := []string{
 		"user name",
-		"first name",
-		"last name",
 		"email",
 		"local id",
 		"remote id",
@@ -61,8 +59,6 @@ func (kc tKC) printFederatedIDsTable() {
 		remID, remIDP := kc.getFedID(userName)
 		line := []any{
 			userName,
-			deref(user.FirstName),
-			deref(user.LastName),
 			deref(user.Email),
 			deref(user.ID),
 			remID,

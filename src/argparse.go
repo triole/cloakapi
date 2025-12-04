@@ -5,7 +5,6 @@ import (
 	"os"
 	"reflect"
 	"regexp"
-	"sort"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -80,14 +79,6 @@ func pprintCommandList(cmds any) (ret string) {
 		val := line[1]
 		ret += fmt.Sprintf("\n%40s: %s", key, val)
 	}
-	return
-}
-
-func sortedIterator(mp map[string]string) (arr []string) {
-	for key := range mp {
-		arr = append(arr, key)
-	}
-	sort.Strings(arr)
 	return
 }
 
