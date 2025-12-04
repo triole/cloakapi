@@ -11,7 +11,7 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-func derefString(inp *string) (r string) {
+func deref(inp *string) (r string) {
 	if inp != nil {
 		r = *inp
 	}

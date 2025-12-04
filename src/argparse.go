@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -14,7 +16,27 @@ var (
 	appName        = "cloakAPI"
 	appDescription = "an abstraction layer for the Keycloak Admin API"
 	appMainversion = "0.1"
+
+	commands = tCommands{
+		List: tCommandsList{
+			FedIDs:            "federated user ids:fed",
+			Users:             "users:usr",
+			UserAttributes:    "user attributes:att",
+			IdentityProviders: "identity providers:idp",
+		},
+	}
 )
+
+type tCommands struct {
+	List tCommandsList
+}
+
+type tCommandsList struct {
+	FedIDs            string
+	Users             string
+	UserAttributes    string
+	IdentityProviders string
+}
 
 var cli struct {
 	Action      string `kong:"-" enum:"conf,exec,calc" default:"conf"`
@@ -28,11 +50,38 @@ var cli struct {
 	VersionFlag bool   `help:"display version" short:"V"`
 
 	Ls struct {
-		Entity string `help:"entity to list" arg:"" enum:"users,idps,feds" default:"users"`
-	} `cmd:"" help:"list entities, can be: users,idps,feds"`
+		Entity string `help:"entity to list" arg:"" default:"usr"`
+	} `cmd:"" help:"list entities, available commands: ${listCommands}"`
+}
+
+func getCommand(str string) (ret string) {
+	arr := strings.Split(str, ":")
+	if len(arr) > 1 {
+		ret = arr[1]
+	}
+	return
+}
+func pprintCommandList(cmds any) (ret string) {
+	v := reflect.ValueOf(cmds)
+	for i := 0; i < v.NumField(); i++ {
+		line := strings.Split(v.Field(i).String(), ":")
+		key := line[0]
+		val := line[1]
+		ret += fmt.Sprintf("\n%40s: %s", key, val)
+	}
+	return
+}
+
+func sortedIterator(mp map[string]string) (arr []string) {
+	for key := range mp {
+		arr = append(arr, key)
+	}
+	sort.Strings(arr)
+	return
 }
 
 func parseArgs() {
+	listCommands := pprintCommandList(commands.List)
 	ctx := kong.Parse(&cli,
 		kong.Name(appName),
 		kong.Description(appDescription),
@@ -42,7 +91,8 @@ func parseArgs() {
 			Summary: true,
 		}),
 		kong.Vars{
-			"configFile": "conf.toml",
+			"configFile":   "conf.toml",
+			"listCommands": listCommands,
 		},
 	)
 	_ = ctx.Run()

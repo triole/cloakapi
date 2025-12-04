@@ -10,14 +10,39 @@ func (kc *tKC) printTable() {
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
-		case "feds":
+		case getCommand(commands.List.FedIDs):
 			kc.printFederatedIDsTable()
-			// case "idps":
-			// 	kc.printIDPsTable()
-			// case "users":
-			// 	kc.printUsersTable()
+		case getCommand(commands.List.IdentityProviders):
+			kc.printIDPsTable()
+		case getCommand(commands.List.Users):
+			kc.printUsersTable()
 		}
 	}
+}
+
+func (kc tKC) printUsersTable() {
+	header := []string{
+		"user name",
+		"first name",
+		"last name",
+		"email",
+		"user enabled",
+		"email verified",
+	}
+	var content [][]any
+	for _, user := range kc.API.Users {
+		userName := deref(user.Username)
+		line := []any{
+			userName,
+			deref(user.FirstName),
+			deref(user.LastName),
+			deref(user.Email),
+			*user.Enabled,
+			*user.EmailVerified,
+		}
+		content = append(content, line)
+	}
+	renderTable(header, content)
 }
 
 func (kc tKC) printFederatedIDsTable() {
@@ -32,16 +57,38 @@ func (kc tKC) printFederatedIDsTable() {
 	}
 	var content [][]any
 	for _, user := range kc.API.Users {
-		userName := derefString(user.Username)
+		userName := deref(user.Username)
 		remID, remIDP := kc.getFedID(userName)
 		line := []any{
 			userName,
-			derefString(user.FirstName),
-			derefString(user.LastName),
-			derefString(user.Email),
-			derefString(user.ID),
+			deref(user.FirstName),
+			deref(user.LastName),
+			deref(user.Email),
+			deref(user.ID),
 			remID,
 			remIDP,
+		}
+		content = append(content, line)
+	}
+	renderTable(header, content)
+}
+
+func (kc tKC) printIDPsTable() {
+	header := []string{
+		"name",
+		"alias",
+		"internal id",
+		"enabled",
+		"link only",
+	}
+	var content [][]any
+	for _, idp := range kc.API.IDPs {
+		line := []any{
+			deref(idp.DisplayName),
+			deref(idp.Alias),
+			deref(idp.InternalID),
+			*idp.Enabled,
+			*idp.LinkOnly,
 		}
 		content = append(content, line)
 	}

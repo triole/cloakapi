@@ -20,11 +20,11 @@ func main() {
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
-		case "feds":
+		case getCommand(commands.List.FedIDs):
 			kc.fetchFederatedIDs()
-		case "idps":
+		case getCommand(commands.List.IdentityProviders):
 			kc.fetchIDPs()
-		case "users":
+		case getCommand(commands.List.Users):
 			kc.fetchUsers()
 		}
 	}
