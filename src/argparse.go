@@ -51,6 +51,11 @@ var cli struct {
 	Ls struct {
 		Entity string `help:"entity to list" arg:"" enum:"${listCommandEnums}"`
 	} `cmd:"" help:"list entities, available commands: ${listCommands}"`
+
+	Tpl struct {
+		String string `help:"execute template string" short:"s"`
+		File   string `help:"template file path" short:"f"`
+	} `cmd:"" help:"execute template string or load from file"`
 }
 
 func getCommandEnums(cmds any) (ret string) {
@@ -75,10 +80,11 @@ func pprintCommandList(cmds any) (ret string) {
 	v := reflect.ValueOf(cmds)
 	for i := 0; i < v.NumField(); i++ {
 		line := strings.Split(v.Field(i).String(), ":")
-		key := line[0]
+		// key := line[0]
 		val := line[1]
-		ret += fmt.Sprintf("\n%40s: %s", key, val)
+		ret += fmt.Sprintf("%s, ", val)
 	}
+	ret = strings.TrimSuffix(ret, ", ")
 	return
 }
 

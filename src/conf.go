@@ -17,8 +17,7 @@ func (kc *tKC) initConf() {
 	configFile, err := kc.detectConfigFiles(cli.Conf)
 	kc.Lg.Debug("load config file", logseal.F{"path": configFile})
 
-	raw, err := os.ReadFile(configFile)
-	kc.Lg.IfErrFatal("error reading general config %q, %q", configFile, err)
+	raw := kc.readFile(configFile)
 	raw = []byte(os.ExpandEnv(string(raw)))
 	switch filepath.Ext(configFile) {
 	case ".json":

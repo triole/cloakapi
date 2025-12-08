@@ -22,6 +22,18 @@ func main() {
 		case getCommand(commands.List.Users):
 			kc.fetchUsers()
 		}
+	case "tpl":
+		if cli.Tpl.File != "" || cli.Tpl.String != "" {
+			kc.fetchUsers()
+			kc.fetchFederatedIDs()
+		}
+		if cli.Tpl.File != "" {
+			by := kc.readFile(cli.Tpl.File)
+			kc.execTemplate(string(by))
+		}
+		if cli.Tpl.String != "" {
+			kc.execTemplate(cli.Tpl.String)
+		}
 	}
 
 	switch cli.Output {
