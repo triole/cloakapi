@@ -58,7 +58,7 @@ var cli struct {
 	} `cmd:"" help:"execute template string or load from file"`
 
 	Var struct {
-	} `cmd:"" help:"list availabe template variables"`
+	} `cmd:"" help:"list available template variables"`
 }
 
 func getCommandEnums(cmds any) (ret string) {

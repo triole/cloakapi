@@ -38,6 +38,7 @@ Flags:
 Commands:
   ls     list entities, available commands: fed, usr, att, idp
   tpl    execute template string or load from file
+  var    list available template variables
 
 Run "cloakAPI <command> --help" for more information on a command.
 ```
