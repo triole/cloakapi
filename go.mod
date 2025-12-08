@@ -5,6 +5,7 @@ go 1.25.4
 require (
 	github.com/Nerzal/gocloak/v13 v13.9.0
 	github.com/alecthomas/kong v1.13.0
+	github.com/ettle/strcase v0.2.0
 	github.com/jedib0t/go-pretty/v6 v6.7.5
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/triole/logseal v0.0.0-20240105053125-57d1f8179998

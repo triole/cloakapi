@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/Nerzal/gocloak/v13"
@@ -109,7 +110,24 @@ func convertStructToMap(s any) (result tVarMap) {
 		if value == "\u003cnil\u003e" {
 			value = ""
 		}
-		result[strings.ToLower(fieldName)] = value
+
+		result[jsonKey(fieldName)] = value
 	}
 	return result
+}
+
+func (kc tKC) listTemplateVars() {
+	var arr []string
+	fields := reflect.VisibleFields(reflect.TypeOf(gocloak.User{}))
+	for _, field := range fields {
+		arr = append(arr, jsonKey(field.Name))
+	}
+	fields = reflect.VisibleFields(reflect.TypeOf(gocloak.FederatedIdentityRepresentation{}))
+	for _, field := range fields {
+		arr = append(arr, jsonKey(field.Name))
+	}
+	sort.Strings(arr)
+	for _, el := range arr {
+		fmt.Printf("%s\n", el)
+	}
 }

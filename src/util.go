@@ -6,7 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
+	"github.com/ettle/strcase"
 	toml "github.com/pelletier/go-toml/v2"
 	"go.yaml.in/yaml/v3"
 )
@@ -57,6 +59,10 @@ func find(basedir string, rxFilter string) []string {
 func fmtYAML(i any) string {
 	s, _ := yaml.Marshal(i)
 	return string(s)
+}
+
+func jsonKey(s string) string {
+	return strings.ToLower(strcase.ToSnake(s))
 }
 
 func pprintJSON(i any) {

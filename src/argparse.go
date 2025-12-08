@@ -56,6 +56,9 @@ var cli struct {
 		String string `help:"execute template string" short:"s"`
 		File   string `help:"template file path" short:"f"`
 	} `cmd:"" help:"execute template string or load from file"`
+
+	Var struct {
+	} `cmd:"" help:"list availabe template variables"`
 }
 
 func getCommandEnums(cmds any) (ret string) {

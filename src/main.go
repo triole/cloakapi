@@ -34,6 +34,8 @@ func main() {
 		if cli.Tpl.String != "" {
 			kc.execTemplate(cli.Tpl.String)
 		}
+	case "var":
+		kc.listTemplateVars()
 	}
 
 	switch cli.Output {
