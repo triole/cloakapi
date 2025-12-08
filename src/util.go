@@ -74,4 +74,10 @@ func pprintYAML(i any) {
 	fmt.Println(string(s))
 }
 
+func rxReplaceAll(basestring, regex, newstring string) (r string) {
+	rx := regexp.MustCompile(regex)
+	r = rx.ReplaceAllString(basestring, newstring)
+	return
+}
+
 // keep-sorted end

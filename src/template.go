@@ -30,10 +30,10 @@ func (kc tKC) execTemplate(tplStr string) {
 			panic(err)
 		}
 		s := buf.String()
-		s = strings.ReplaceAll(s, "\n", "")
+		s = rxReplaceAll(s, "\r?\n", "")
 		s = strings.TrimSpace(s)
 		if s != "" {
-			fmt.Printf("%s\n", buf.String())
+			fmt.Printf("%s\n", s)
 		}
 	}
 }
