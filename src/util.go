@@ -54,17 +54,6 @@ func fmtYAML(i any) string {
 	return string(s)
 }
 
-func fileDoesExists(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return true
-}
-
 func find(basedir string, rxFilter string) []string {
 	_, err := os.Stat(basedir)
 	// if err != nil {
