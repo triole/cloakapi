@@ -12,7 +12,7 @@ import (
 
 var (
 	BUILDTAGS      string
-	appName        = "cloakAPI"
+	appName        = "cloakapi"
 	appDescription = "an abstraction layer for the Keycloak Admin API"
 	appMainversion = "0.1"
 
