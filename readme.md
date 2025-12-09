@@ -1,5 +1,22 @@
 # Cloakapi
 
+<!-- toc -->
+
+- [Synopsis](#synopsis)
+- [Features](#features)
+- [Configuration](#configuration)
+- [Usage](#usage)
+  - [Commands](#commands)
+  - [Flags](#flags)
+- [Examples](#examples)
+- [Template System](#template-system)
+  - [Template Variables](#template-variables)
+  - [Example Templates](#example-templates)
+- [Help](#help)
+- [Keycloak config](#keycloak-config)
+
+<!-- /toc -->
+
 ## Synopsis
 
 Cloakapi is a command-line tool that provides an abstraction layer for the Keycloak Admin API. It allows users to easily list, fetch, and manipulate Keycloak entities such as users, federated identities, and identity providers through a simple CLI interface.
@@ -142,3 +159,34 @@ Commands:
 
 Run "cloakapi <command> --help" for more information on a command.
 ```
+
+## Keycloak config
+
+To use Cloakapi with Keycloak, you need to configure a service account client with appropriate permissions. Follow these steps:
+
+1. **Create a client**:
+
+   - Navigate to your Keycloak admin console
+   - Go to "Clients" section
+   - Click "Create client"
+   - Set the client ID to "service-account" (or any name you prefer)
+   - Select "Service Account" as the client type
+2. **Configure client capabilities**: Under the "Capability Config" section, ensure the following settings are enabled:
+
+   - **Client Authentication**: Enabled
+   - **Authorization**: Enabled
+   - **Authentication Flow, Standard Flow**: Enabled
+   - **Authentication Flow, Direct Access Grants**: Enabled
+
+   The rest of the capability config options can remain disabled.
+3. **Assign required roles**:
+
+   - Navigate to the "Service accounts roles" tab in the client settings
+   - Assign the necessary Keycloak roles that your service account needs to perform operations
+   - For basic functionality, you'll typically need at least "view-users" or "manage-users" roles
+   - You may also need "view-realm" or "view-identity-providers" depending on your specific use cases
+4. **Obtain client credentials**:
+
+   - After creating the client, go to the "Credentials" tab
+   - Note down the client ID and client secret
+   - These will be used in your Cloakapi configuration file
