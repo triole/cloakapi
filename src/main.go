@@ -10,17 +10,25 @@ func main() {
 	kc.initConf()
 	kc.login()
 
+	var vals any
+
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
+		case getCommand(commands.List.AuthFlows):
+			vals, _ = kc.fetchAuthFlows()
 		case getCommand(commands.List.FedIDs):
 			kc.fetchFederatedIDs()
+			vals = kc.API.FedIDs
 		case getCommand(commands.List.IdentityProviders):
 			kc.fetchIDPs()
+			vals = kc.API.IDPs
 		case getCommand(commands.List.UserAttributes):
 			kc.fetchUsers()
+			vals = kc.API.Users
 		case getCommand(commands.List.Users):
 			kc.fetchUsers()
+			vals = kc.API.Users
 		}
 	case "tpl":
 		if cli.Tpl.File != "" || cli.Tpl.String != "" {
@@ -40,11 +48,11 @@ func main() {
 
 	switch cli.Output {
 	case "json":
-		pprintJSON(kc.API)
+		pprintJSON(vals)
 	case "toml":
-		pprintTOML(kc.API)
+		pprintTOML(vals)
 	case "yaml":
-		pprintYAML(kc.API)
+		pprintYAML(vals)
 	case "table":
 		kc.printTable()
 	}

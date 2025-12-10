@@ -9,6 +9,14 @@ import (
 )
 
 // keep-sorted start block=yes newline_separated=yes
+func (kc *tKC) fetchAuthFlows() (authFlows []*gocloak.AuthenticationFlowRepresentation, err error) {
+	authFlows, err = kc.Session.Client.GetAuthenticationFlows(
+		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
+	)
+	kc.Lg.IfErrError("error", logseal.F{"error": kc.API.IDPsError})
+	return
+}
+
 func (kc *tKC) fetchFederatedIDs() {
 	if len(kc.API.Users) == 0 {
 		kc.fetchUsers()

@@ -22,6 +22,7 @@ var (
 			Users:             "users:usr",
 			UserAttributes:    "user attributes:att",
 			IdentityProviders: "identity providers:idp",
+			AuthFlows:         "authentication flows:flw",
 		},
 	}
 )
@@ -35,6 +36,7 @@ type tCommandsList struct {
 	Users             string
 	UserAttributes    string
 	IdentityProviders string
+	AuthFlows         string
 }
 
 var cli struct {
