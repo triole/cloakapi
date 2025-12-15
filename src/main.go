@@ -30,6 +30,12 @@ func main() {
 			kc.fetchUsers()
 			vals = kc.API.Users
 		}
+	case "rm":
+		switch cli.Rm.Entity {
+		case getCommand(commands.List.Users):
+			kc.fetchUsers()
+			kc.removeUser(cli.Rm.Target)
+		}
 	case "tpl":
 		if cli.Tpl.File != "" || cli.Tpl.String != "" {
 			kc.fetchUsers()

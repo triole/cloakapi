@@ -51,8 +51,13 @@ var cli struct {
 	VersionFlag bool   `help:"display version" short:"V"`
 
 	Ls struct {
-		Entity string `help:"entity to list" arg:"" enum:"${listCommandEnums}"`
-	} `cmd:"" help:"list entities, available commands: ${listCommands}"`
+		Entity string `help:"list entity" arg:"" enum:"${listCommandEnums}"`
+	} `cmd:"" help:"list entity, available commands: ${listCommands}"`
+
+	Rm struct {
+		Entity string `help:"remove entity" arg:"" enum:"${listCommandEnums}"`
+		Target string `help:"remove entity" arg:""`
+	} `cmd:"" help:"remove entity, available commands: ${listCommands}"`
 
 	Tpl struct {
 		String string `help:"execute template string" short:"s"`

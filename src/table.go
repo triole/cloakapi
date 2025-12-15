@@ -91,6 +91,7 @@ func (kc tKC) printUserAttributes() {
 
 func (kc tKC) printUsersTable() {
 	header := []string{
+		"user id",
 		"user name",
 		"first name",
 		"last name",
@@ -102,6 +103,7 @@ func (kc tKC) printUsersTable() {
 	for _, user := range kc.API.Users {
 		userName := deref(user.Username)
 		line := []any{
+			deref(user.ID),
 			userName,
 			deref(user.FirstName),
 			deref(user.LastName),
