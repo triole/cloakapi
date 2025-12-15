@@ -153,7 +153,8 @@ Flags:
   -V, --version-flag              display version
 
 Commands:
-  ls     list entities, available commands: fed, usr, att, idp
+  ls     list entity, available commands: fed, usr, att, idp, flw
+  rm     remove entity, available commands: fed, usr, att, idp, flw
   tpl    execute template string or load from file
   var    list available template variables
 
