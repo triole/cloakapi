@@ -18,17 +18,21 @@ var (
 
 	commands = tCommands{
 		List: tCommandsList{
-			FedIDs:            "federated user ids:fed",
-			Users:             "users:usr",
-			UserAttributes:    "user attributes:att",
-			IdentityProviders: "identity providers:idp",
-			AuthFlows:         "authentication flows:flw",
+			FedIDs:            "fed",
+			Users:             "usr",
+			UserAttributes:    "att",
+			IdentityProviders: "idp",
+			AuthFlows:         "flw",
+		},
+		Remove: tCommandsList{
+			Users: "usr",
 		},
 	}
 )
 
 type tCommands struct {
-	List tCommandsList
+	List   tCommandsList
+	Remove tCommandsList
 }
 
 type tCommandsList struct {
@@ -51,13 +55,13 @@ var cli struct {
 	VersionFlag bool   `help:"display version" short:"V"`
 
 	Ls struct {
-		Entity string `help:"list entity" arg:"" enum:"${listCommandEnums}"`
+		Entity string `help:"list entity" arg:"" enum:"${listCommands}"`
 	} `cmd:"" help:"list entity, available commands: ${listCommands}"`
 
 	Rm struct {
-		Entity string `help:"remove entity" arg:"" enum:"${listCommandEnums}"`
+		Entity string `help:"remove entity" arg:"" enum:"${removeCommands}"`
 		Target string `help:"remove entity" arg:""`
-	} `cmd:"" help:"remove entity, available commands: ${listCommands}"`
+	} `cmd:"" help:"remove entity, available commands: ${removeCommands}"`
 
 	Tpl struct {
 		String string `help:"execute template string" short:"s"`
@@ -68,31 +72,13 @@ var cli struct {
 	} `cmd:"" help:"list available template variables"`
 }
 
-func getCommandEnums(cmds any) (ret string) {
-	v := reflect.ValueOf(cmds)
-	for i := 0; i < v.NumField(); i++ {
-		cmd := getCommand(v.Field(i).String())
-		ret += cmd + ","
-	}
-	ret = strings.TrimSuffix(ret, ",")
-	return
-}
-
-func getCommand(str string) (ret string) {
-	arr := strings.Split(str, ":")
-	if len(arr) > 1 {
-		ret = arr[1]
-	}
-	return
-}
-
 func pprintCommandList(cmds any) (ret string) {
 	v := reflect.ValueOf(cmds)
 	for i := 0; i < v.NumField(); i++ {
-		line := strings.Split(v.Field(i).String(), ":")
-		// key := line[0]
-		val := line[1]
-		ret += fmt.Sprintf("%s, ", val)
+		val := v.Field(i).String()
+		if val != "" {
+			ret += fmt.Sprintf("%s, ", val)
+		}
 	}
 	ret = strings.TrimSuffix(ret, ", ")
 	return
@@ -100,7 +86,7 @@ func pprintCommandList(cmds any) (ret string) {
 
 func parseArgs() {
 	listCommands := pprintCommandList(commands.List)
-	listCommandEnums := getCommandEnums(commands.List)
+	removeCommands := pprintCommandList(commands.Remove)
 	ctx := kong.Parse(&cli,
 		kong.Name(appName),
 		kong.Description(appDescription),
@@ -110,8 +96,8 @@ func parseArgs() {
 			Summary: true,
 		}),
 		kong.Vars{
-			"listCommands":     listCommands,
-			"listCommandEnums": listCommandEnums,
+			"listCommands":   listCommands,
+			"removeCommands": removeCommands,
 		},
 	)
 	_ = ctx.Run()

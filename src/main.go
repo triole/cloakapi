@@ -15,24 +15,24 @@ func main() {
 	switch cli.Action {
 	case "ls":
 		switch cli.Ls.Entity {
-		case getCommand(commands.List.AuthFlows):
+		case commands.List.AuthFlows:
 			vals, _ = kc.fetchAuthFlows()
-		case getCommand(commands.List.FedIDs):
+		case commands.List.FedIDs:
 			kc.fetchFederatedIDs()
 			vals = kc.API.FedIDs
-		case getCommand(commands.List.IdentityProviders):
+		case commands.List.IdentityProviders:
 			kc.fetchIDPs()
 			vals = kc.API.IDPs
-		case getCommand(commands.List.UserAttributes):
+		case commands.List.UserAttributes:
 			kc.fetchUsers()
 			vals = kc.API.Users
-		case getCommand(commands.List.Users):
+		case commands.List.Users:
 			kc.fetchUsers()
 			vals = kc.API.Users
 		}
 	case "rm":
 		switch cli.Rm.Entity {
-		case getCommand(commands.List.Users):
+		case commands.Remove.Users:
 			kc.fetchUsers()
 			kc.removeUser(cli.Rm.Target)
 		}

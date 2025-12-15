@@ -11,13 +11,13 @@ func (kc *tKC) printTable() {
 	case "ls":
 		switch cli.Ls.Entity {
 		// keep-sorted start block=yes
-		case getCommand(commands.List.FedIDs):
+		case commands.List.FedIDs:
 			kc.printFederatedIDsTable()
-		case getCommand(commands.List.IdentityProviders):
+		case commands.List.IdentityProviders:
 			kc.printIDPsTable()
-		case getCommand(commands.List.UserAttributes):
+		case commands.List.UserAttributes:
 			kc.printUserAttributes()
-		case getCommand(commands.List.Users):
+		case commands.List.Users:
 			kc.printUsersTable()
 			// keep-sorted end
 		}
