@@ -29,6 +29,8 @@ func main() {
 		case commands.List.Users:
 			kc.fetchUsers()
 			vals = kc.API.Users
+		case commands.List.UserSessions:
+			vals = kc.fetchUserSession()
 		}
 	case "rm":
 		switch cli.Rm.Entity {

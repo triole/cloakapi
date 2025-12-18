@@ -20,6 +20,7 @@ var (
 		List: tCommandsList{
 			FedIDs:            "fed",
 			Users:             "usr",
+			UserSessions:      "use",
 			UserAttributes:    "att",
 			IdentityProviders: "idp",
 			AuthFlows:         "flw",
@@ -38,6 +39,7 @@ type tCommands struct {
 type tCommandsList struct {
 	FedIDs            string
 	Users             string
+	UserSessions      string
 	UserAttributes    string
 	IdentityProviders string
 	AuthFlows         string

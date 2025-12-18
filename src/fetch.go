@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/triole/logseal"
@@ -47,6 +48,32 @@ func (kc *tKC) fetchIDPs() {
 	)
 	kc.Lg.IfErrError("error", logseal.F{"error": kc.API.IDPsError})
 
+}
+
+func (kc *tKC) fetchUserSession() (use []*gocloak.UserSessionRepresentation) {
+	if len(kc.API.Users) == 0 {
+		kc.fetchUsers()
+	}
+	if kc.API.UsersError == nil {
+		for _, user := range kc.API.Users {
+			ses, err := kc.Session.Client.GetUserSessions(
+				kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm,
+				*user.ID,
+			)
+			kc.Lg.IfErrError(
+				"could not fetch federated id",
+				logseal.F{
+					"user": deref(user.Username), "error": err,
+				},
+			)
+			if err == nil && len(ses) > 0 {
+				fmt.Printf("%+v\n", ses)
+				use = append(use, ses...)
+			}
+			kc.Lg.IfErrError("could not user session list", logseal.F{"error": err})
+		}
+	}
+	return
 }
 
 func (kc *tKC) fetchUsers() {
