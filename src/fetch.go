@@ -50,7 +50,10 @@ func (kc *tKC) fetchIDPs() {
 }
 
 func (kc *tKC) fetchUsers() {
-	params := gocloak.GetUsersParams{}
+	max := 999999
+	params := gocloak.GetUsersParams{
+		Max: &max,
+	}
 	kc.API.Users, kc.API.UsersError = kc.Session.Client.GetUsers(
 		kc.Session.CTX, kc.Session.Token.AccessToken, kc.Conf.Realm, params,
 	)
